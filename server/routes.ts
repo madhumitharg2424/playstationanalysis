@@ -72,8 +72,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
                       matchingSales.length > 5 ? 0.75 : 
                       0.65;
       
+      // Convert to lakhs (1 lakh = 100,000)
+      const predictionInLakhs = prediction * 10; // Since dataset is in millions, multiply by 10 to get lakhs
+      
       res.json({
-        prediction: parseFloat(prediction.toFixed(2)),
+        prediction: parseFloat(predictionInLakhs.toFixed(2)),
         accuracy: accuracy,
         console: consoleType,
         region: region,

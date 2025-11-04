@@ -64,9 +64,9 @@ export default function PredictionResults({
           <span className="text-7xl font-bold font-serif text-primary animate-count-up" data-testid="text-prediction-value">
             {count.toFixed(2)}
           </span>
-          <span className="text-2xl text-muted-foreground">M</span>
+          <span className="text-2xl text-muted-foreground">Lakhs</span>
         </div>
-        <p className="text-sm text-muted-foreground mb-4">Predicted Sales (Million Units)</p>
+        <p className="text-sm text-muted-foreground mb-4">Predicted Sales (in Lakhs)</p>
         
         <Badge variant="secondary" className="gap-2" data-testid="badge-accuracy">
           <TrendingUp className="h-3 w-3" />
