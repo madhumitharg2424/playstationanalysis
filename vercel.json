@@ -1,22 +1,3 @@
 {
-  "builds": [
-    {
-      "src": "client/vite.config.ts",
-      "use": "@vercel/vite"
-    },
-    {
-      "src": "api/index.ts",
-      "use": "@vercel/node"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.ts"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
+  "builds": [{ "src": "api/**/*.ts", "use": "@vercel/node" }]
 }
