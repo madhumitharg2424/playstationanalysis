@@ -22,11 +22,34 @@ export default function Home() {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handlePrediction = (data: { console: string; region: string; genre: string }) => {
+  const handlePrediction = async (data: { console: string; region: string; genre: string }) => {
     setIsLoading(true);
     setPrediction(null);
     
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Prediction failed');
+      }
+
+      const result = await response.json();
+      setPrediction({
+        value: result.prediction,
+        accuracy: result.accuracy,
+        console: result.console,
+        region: result.region,
+        genre: result.genre,
+      });
+    } catch (error) {
+      console.error('Error making prediction:', error);
+      // Fallback to mock data on error
       const mockPrediction = Math.random() * 15 + 2;
       setPrediction({
         value: parseFloat(mockPrediction.toFixed(2)),
@@ -35,8 +58,9 @@ export default function Home() {
         region: data.region,
         genre: data.genre,
       });
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleVoiceInput = (transcript: string) => {
