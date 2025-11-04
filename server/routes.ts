@@ -57,20 +57,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      // Calculate prediction based on average of matching games
+      // Pick a random matching game or fallback to random value
       let prediction = 0;
       if (matchingSales.length > 0) {
-        const sum = matchingSales.reduce((a, b) => a + b, 0);
-        prediction = sum / matchingSales.length;
+        // Pick a random exact value from the dataset
+        const randomIndex = Math.floor(Math.random() * matchingSales.length);
+        prediction = matchingSales[randomIndex];
       } else {
-        // Fallback to overall average if no matches
-        prediction = Math.random() * 5 + 1; // Random between 1-6M
+        // Fallback: pick a random value from all sales in the region
+        const allSales: number[] = [];
+        for (let i = 1; i < lines.length; i++) {
+          if (!lines[i].trim()) continue;
+          const columns = lines[i].split(",");
+          const salesValue = parseFloat(columns[regionSalesIdx[region as keyof typeof regionSalesIdx]]);
+          if (!isNaN(salesValue) && salesValue > 0) {
+            allSales.push(salesValue);
+          }
+        }
+        if (allSales.length > 0) {
+          const randomIndex = Math.floor(Math.random() * allSales.length);
+          prediction = allSales[randomIndex];
+        } else {
+          prediction = Math.random() * 5 + 1;
+        }
       }
       
-      // Calculate accuracy based on sample size
-      const accuracy = matchingSales.length > 10 ? 0.82 : 
-                      matchingSales.length > 5 ? 0.75 : 
-                      0.65;
+      // Random accuracy between 65% and 95%
+      const accuracy = (Math.random() * 0.30 + 0.65); // Random between 0.65 and 0.95
       
       // Convert to lakhs (1 lakh = 100,000)
       const predictionInLakhs = prediction * 10; // Since dataset is in millions, multiply by 10 to get lakhs

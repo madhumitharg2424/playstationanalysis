@@ -2,15 +2,11 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import PredictionForm from "@/components/PredictionForm";
-import VoiceInput from "@/components/VoiceInput";
 import PredictionResults from "@/components/PredictionResults";
-import ChatInterface from "@/components/ChatInterface";
 import DataVisualization from "@/components/DataVisualization";
 import FeatureCard from "@/components/FeatureCard";
 import Footer from "@/components/Footer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mic, MessageSquare, Brain, TrendingUp, Globe, Zap } from "lucide-react";
-import voiceIllustration from "@assets/generated_images/Voice_input_illustration_character_ace10a41.png";
+import { Brain, TrendingUp, Globe, Zap } from "lucide-react";
 
 export default function Home() {
   const [prediction, setPrediction] = useState<{
@@ -63,10 +59,7 @@ export default function Home() {
     }
   };
 
-  const handleVoiceInput = (transcript: string) => {
-    console.log('Voice input received:', transcript);
-    handlePrediction({ console: "PS4", region: "NA", genre: "Action" });
-  };
+  
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -79,84 +72,39 @@ export default function Home() {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold font-serif mb-4">Make Your Prediction</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Choose your preferred method: fill out the form, chat with our AI, or simply speak your query.
+              Select console, region, and genre to predict game sales based on historical data.
             </p>
           </div>
 
-          <Tabs defaultValue="form" className="max-w-4xl mx-auto">
-            <TabsList className="grid w-full grid-cols-3 mb-8">
-              <TabsTrigger value="form" className="gap-2" data-testid="tab-form">
-                <Brain className="h-4 w-4" />
-                Form
-              </TabsTrigger>
-              <TabsTrigger value="voice" className="gap-2" data-testid="tab-voice">
-                <Mic className="h-4 w-4" />
-                Voice
-              </TabsTrigger>
-              <TabsTrigger value="chat" className="gap-2" data-testid="tab-chat">
-                <MessageSquare className="h-4 w-4" />
-                Chat
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="form" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <PredictionForm onSubmit={handlePrediction} isLoading={isLoading} />
-                {prediction && (
-                  <PredictionResults
-                    prediction={prediction.value}
-                    accuracy={prediction.accuracy}
-                    console={prediction.console}
-                    region={prediction.region}
-                    genre={prediction.genre}
-                  />
-                )}
-                {!prediction && !isLoading && (
-                  <div className="flex items-center justify-center text-center p-8 border-2 border-dashed rounded-lg">
-                    <p className="text-muted-foreground">
-                      Select your parameters and click predict to see results
-                    </p>
-                  </div>
-                )}
-                {isLoading && (
-                  <div className="flex items-center justify-center p-8">
-                    <div className="text-center space-y-4">
-                      <div className="h-12 w-12 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                      <p className="text-muted-foreground">Analyzing data...</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="voice" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-6">
-                  <VoiceInput onVoiceInput={handleVoiceInput} />
-                  <div className="flex items-center justify-center">
-                    <img 
-                      src={voiceIllustration} 
-                      alt="Voice interaction" 
-                      className="h-48 w-48 opacity-50"
-                    />
+          <div className="max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <PredictionForm onSubmit={handlePrediction} isLoading={isLoading} />
+              {prediction && (
+                <PredictionResults
+                  prediction={prediction.value}
+                  accuracy={prediction.accuracy}
+                  console={prediction.console}
+                  region={prediction.region}
+                  genre={prediction.genre}
+                />
+              )}
+              {!prediction && !isLoading && (
+                <div className="flex items-center justify-center text-center p-8 border-2 border-dashed rounded-lg">
+                  <p className="text-muted-foreground">
+                    Select your parameters and click predict to see results
+                  </p>
+                </div>
+              )}
+              {isLoading && (
+                <div className="flex items-center justify-center p-8">
+                  <div className="text-center space-y-4">
+                    <div className="h-12 w-12 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                    <p className="text-muted-foreground">Analyzing data...</p>
                   </div>
                 </div>
-                {prediction && (
-                  <PredictionResults
-                    prediction={prediction.value}
-                    accuracy={prediction.accuracy}
-                    console={prediction.console}
-                    region={prediction.region}
-                    genre={prediction.genre}
-                  />
-                )}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="chat">
-              <ChatInterface />
-            </TabsContent>
-          </Tabs>
+              )}
+            </div>
+          </div>
         </section>
 
         <section id="analytics" className="container mx-auto px-4 py-20 lg:px-8 bg-muted/30">
@@ -178,19 +126,14 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <FeatureCard
-              icon={Mic}
-              title="Voice Recognition"
-              description="Natural language processing allows you to speak your queries instead of typing them."
-            />
-            <FeatureCard
               icon={Brain}
-              title="Machine Learning"
-              description="Advanced ML models trained on thousands of games achieve 80%+ prediction accuracy."
+              title="Data-Driven Predictions"
+              description="Predictions based on actual historical sales data from thousands of PlayStation games."
             />
             <FeatureCard
               icon={TrendingUp}
-              title="Real-time Predictions"
-              description="Get instant sales forecasts with detailed breakdowns and confidence scores."
+              title="Real-time Analysis"
+              description="Get instant sales forecasts with detailed breakdowns based on historical patterns."
             />
             <FeatureCard
               icon={Globe}
@@ -198,14 +141,9 @@ export default function Home() {
               description="Compare predictions across North America, Europe, Japan, and other markets."
             />
             <FeatureCard
-              icon={MessageSquare}
-              title="AI Chatbot"
-              description="Interactive conversational interface makes predictions as easy as chatting."
-            />
-            <FeatureCard
               icon={Zap}
               title="Fast & Accurate"
-              description="Lightning-fast predictions backed by scientifically validated models."
+              description="Lightning-fast predictions backed by comprehensive dataset analysis."
             />
           </div>
         </section>
